@@ -1,0 +1,98 @@
+@Entity
+public class JobSeeker {
+    @Id
+    private Long id;
+    private String name;
+    private String email;
+    @OneToOne
+    private Profile profile;
+    @OneToMany
+    private List<Application> applications;
+    @ManyToMany
+    private List<Skill> skills;
+}
+
+@Entity
+public class Recruiter {
+    @Id
+    private Long id;
+    private String name;
+    private String email;
+    @ManyToOne
+    private Company company;
+    @OneToMany
+    private List<Post> posts;
+}
+
+@Entity
+public class Job {
+    @Id
+    private Long id;
+    private String title;
+    private String description;
+    @ManyToOne
+    private Company company;
+    @OneToMany
+    private List<Application> applications;
+    @ManyToMany
+    private List<Skill> requiredSkills;
+}
+
+@Entity
+public class Application {
+    @Id
+    private Long id;
+    @ManyToOne
+    private JobSeeker jobSeeker;
+    @ManyToOne
+    private Job job;
+    private String status;
+    private Date appliedDate;
+}
+
+@Entity
+public class Profile {
+    @Id
+    private Long id;
+    private String summary;
+    @ManyToMany
+    private List<Skill> skills;
+}
+
+@Entity
+public class Skill {
+    @Id
+    private Long id;
+    private String name;
+}
+
+@Entity
+public class Company {
+    @Id
+    private Long id;
+    private String name;
+    private String description;
+    @OneToMany
+    private List<Job> jobs;
+}
+
+@Entity
+public class Post {
+    @Id
+    private Long id;
+    private String content;
+    @ManyToOne
+    private Recruiter recruiter;
+}
+
+@Entity
+public class Feedback {
+    @Id
+    private Long id;
+    private String comment;
+    private int rating;
+    @ManyToOne
+    private JobSeeker jobSeeker;
+    @ManyToOne
+    private Company company;
+}
