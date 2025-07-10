@@ -83,7 +83,6 @@ public class ApplicationDAO {
             
             // Remove from applications
             database.getApplications().remove(applicationId);
-            database.saveData();
         }
     }
 } 

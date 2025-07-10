@@ -58,6 +58,5 @@ public class JobDAO {
 
     public void deleteJob(Long jobId) {
         database.getJobs().remove(jobId);
-        database.saveData();
     }
 } 
