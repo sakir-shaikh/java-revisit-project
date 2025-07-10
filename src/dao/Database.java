@@ -6,7 +6,6 @@ import java.io.*;
 import java.util.*;
 
 public class Database {
-    private static final String DB_FILE = "src/database.json";
     private static Database instance;
     
     // Collections to store data
@@ -218,27 +217,10 @@ public class Database {
         feedbacks.put(feedback2.getId(), feedback2);
         
         // Save the sample data
-        saveData();
+
         System.out.println("Sample data initialized successfully!");
     }
 
-    public void saveData() {
-        // For now, we'll just create a simple JSON structure
-        try (PrintWriter writer = new PrintWriter(new FileWriter(DB_FILE))) {
-            writer.println("{");
-            writer.println("  \"jobSeekers\": " + jobSeekers.size() + ",");
-            writer.println("  \"recruiters\": " + recruiters.size() + ",");
-            writer.println("  \"jobs\": " + jobs.size() + ",");
-            writer.println("  \"applications\": " + applications.size() + ",");
-            writer.println("  \"companies\": " + companies.size() + ",");
-            writer.println("  \"skills\": " + skills.size() + ",");
-            writer.println("  \"posts\": " + posts.size() + ",");
-            writer.println("  \"feedbacks\": " + feedbacks.size());
-            writer.println("}");
-        } catch (IOException e) {
-            System.err.println("Error saving database: " + e.getMessage());
-        }
-    }
 
     // ID generators
     public long getNextJobSeekerId() { return nextJobSeekerId++; }
@@ -263,42 +245,36 @@ public class Database {
     // CRUD operations
     public void addJobSeeker(JobSeeker jobSeeker) {
         jobSeekers.put(jobSeeker.getId(), jobSeeker);
-        saveData();
     }
 
     public void addRecruiter(Recruiter recruiter) {
         recruiters.put(recruiter.getId(), recruiter);
-        saveData();
     }
 
     public void addJob(Job job) {
         jobs.put(job.getId(), job);
-        saveData();
     }
 
     public void addApplication(Application application) {
         applications.put(application.getId(), application);
-        saveData();
     }
 
     public void addCompany(Company company) {
         companies.put(company.getId(), company);
-        saveData();
     }
 
     public void addSkill(Skill skill) {
         skills.put(skill.getId(), skill);
-        saveData();
     }
 
     public void addPost(Post post) {
         posts.put(post.getId(), post);
-        saveData();
+
     }
 
     public void addFeedback(Feedback feedback) {
         feedbacks.put(feedback.getId(), feedback);
-        saveData();
+
     }
 
     // Method to reset database with sample data
