@@ -1,15 +1,17 @@
 package ui;
 
-import model.Recruiter;
-import model.Job;
-import model.Application;
-import model.Company;
-import service.JobService;
-import service.ApplicationService;
-import util.ConsoleColors;
-
 import java.util.List;
 import java.util.Scanner;
+import model.Application;
+import model.Company;
+import model.Job;
+import model.Recruiter;
+import service.ApplicationService;
+import service.JobService;
+import util.AppMessages;
+import util.ConsoleColors;
+import util.InputUtils;
+import util.MenuUtils;
 
 public class RecruiterMenu {
     private Recruiter recruiter;
@@ -28,8 +30,14 @@ public class RecruiterMenu {
         ConsoleColors.printTitle("RECRUITER DASHBOARD - " + recruiter.getName());
         
         while (true) {
-            showMenu();
-            int choice = getIntInput("Enter your choice: ");
+            MenuUtils.printMenu(AppMessages.MAIN_MENU,
+                "View All Jobs",
+                "Create New Job",
+                "View Applications",
+                "Update Application Status",
+                "Delete Job",
+                "Logout");
+            int choice = InputUtils.getIntInput(scanner, AppMessages.ENTER_CHOICE);
             
             switch (choice) {
                 case 1:
@@ -48,10 +56,10 @@ public class RecruiterMenu {
                     deleteJob();
                     break;
                 case 6:
-                    ConsoleColors.printInfo("Logging out...");
+                    ConsoleColors.printInfo(AppMessages.LOGGING_OUT);
                     return;
                 default:
-                    ConsoleColors.printError("Invalid choice. Please try again.");
+                    ConsoleColors.printError(AppMessages.INVALID_CHOICE);
             }
         }
     }
@@ -84,20 +92,18 @@ public class RecruiterMenu {
     private void createJob() {
         ConsoleColors.printTitle("CREATE NEW JOB");
         
-        System.out.print("Enter job title: ");
-        String title = scanner.nextLine();
+        String title = InputUtils.getStringInput(scanner, AppMessages.ENTER_JOB_TITLE);
         
-        System.out.print("Enter job description: ");
-        String description = scanner.nextLine();
+        String description = InputUtils.getStringInput(scanner, AppMessages.ENTER_JOB_DESCRIPTION);
         
         // For simplicity, we'll create a default company
         Company company = new Company(1L, "Default Company", "A sample company");
         
         try {
             Job job = jobService.createJob(title, description, company);
-            ConsoleColors.printSuccess("Job created successfully! Job ID: " + job.getId());
+            ConsoleColors.printSuccess(AppMessages.JOB_CREATED_SUCCESS + job.getId());
         } catch (IllegalArgumentException e) {
-            ConsoleColors.printError("Job creation failed: " + e.getMessage());
+            ConsoleColors.printError(AppMessages.JOB_CREATION_FAILED + e.getMessage());
         }
     }
 
@@ -118,15 +124,10 @@ public class RecruiterMenu {
     private void updateApplicationStatus() {
         ConsoleColors.printTitle("UPDATE APPLICATION STATUS");
         
-        System.out.print("Enter application ID: ");
-        Long applicationId = getLongInput("Enter application ID: ");
+        Long applicationId = InputUtils.getLongInput(scanner, AppMessages.ENTER_APPLICATION_ID);
         
-        System.out.println("Enter new status:");
-        System.out.println("1. PENDING");
-        System.out.println("2. ACCEPTED");
-        System.out.println("3. REJECTED");
-        
-        int statusChoice = getIntInput("Enter status choice: ");
+        MenuUtils.printMenu("Enter new status:", "PENDING", "ACCEPTED", "REJECTED");
+        int statusChoice = InputUtils.getIntInput(scanner, "Enter status choice: ");
         String status;
         
         switch (statusChoice) {
@@ -140,29 +141,28 @@ public class RecruiterMenu {
                 status = "REJECTED";
                 break;
             default:
-                ConsoleColors.printError("Invalid status choice.");
+                ConsoleColors.printError(AppMessages.INVALID_CHOICE);
                 return;
         }
         
         try {
             applicationService.updateApplicationStatus(applicationId, status);
-            ConsoleColors.printSuccess("Application status updated successfully!");
+            ConsoleColors.printSuccess(AppMessages.STATUS_UPDATE_SUCCESS);
         } catch (IllegalArgumentException e) {
-            ConsoleColors.printError("Status update failed: " + e.getMessage());
+            ConsoleColors.printError(AppMessages.STATUS_UPDATE_FAILED + e.getMessage());
         }
     }
 
     private void deleteJob() {
         ConsoleColors.printTitle("DELETE JOB");
         
-        System.out.print("Enter job ID to delete: ");
-        Long jobId = getLongInput("Enter job ID: ");
+        Long jobId = InputUtils.getLongInput(scanner, AppMessages.ENTER_JOB_ID);
         
         try {
             jobService.deleteJob(jobId);
-            ConsoleColors.printSuccess("Job deleted successfully!");
+            ConsoleColors.printSuccess(AppMessages.JOB_DELETED_SUCCESS);
         } catch (IllegalArgumentException e) {
-            ConsoleColors.printError("Job deletion failed: " + e.getMessage());
+            ConsoleColors.printError(AppMessages.JOB_DELETION_FAILED + e.getMessage());
         }
     }
 
@@ -187,24 +187,10 @@ public class RecruiterMenu {
     }
 
     private int getIntInput(String prompt) {
-        while (true) {
-            try {
-                System.out.print(prompt);
-                return Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                ConsoleColors.printError("Please enter a valid number.");
-            }
-        }
+        return InputUtils.getIntInput(scanner, prompt);
     }
 
     private Long getLongInput(String prompt) {
-        while (true) {
-            try {
-                System.out.print(prompt);
-                return Long.parseLong(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                ConsoleColors.printError("Please enter a valid number.");
-            }
-        }
+        return InputUtils.getLongInput(scanner, prompt);
     }
 } 

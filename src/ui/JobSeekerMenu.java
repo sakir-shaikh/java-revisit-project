@@ -6,6 +6,9 @@ import model.Application;
 import service.JobService;
 import service.ApplicationService;
 import util.ConsoleColors;
+import util.InputUtils;
+import util.MenuUtils;
+import util.AppMessages;
 
 import java.util.List;
 import java.util.Scanner;
@@ -27,8 +30,14 @@ public class JobSeekerMenu {
         ConsoleColors.printTitle("JOB SEEKER DASHBOARD - " + jobSeeker.getName());
         
         while (true) {
-            showMenu();
-            int choice = getIntInput("Enter your choice: ");
+            MenuUtils.printMenu(AppMessages.MAIN_MENU,
+                "View All Jobs",
+                "Search Jobs",
+                "Apply for Job",
+                "View My Applications",
+                "Withdraw Application",
+                "Logout");
+            int choice = InputUtils.getIntInput(scanner, AppMessages.ENTER_CHOICE);
             
             switch (choice) {
                 case 1:
@@ -47,10 +56,10 @@ public class JobSeekerMenu {
                     withdrawApplication();
                     break;
                 case 6:
-                    ConsoleColors.printInfo("Logging out...");
+                    ConsoleColors.printInfo(AppMessages.LOGGING_OUT);
                     return;
                 default:
-                    ConsoleColors.printError("Invalid choice. Please try again.");
+                    ConsoleColors.printError(AppMessages.INVALID_CHOICE);
             }
         }
     }
@@ -71,7 +80,7 @@ public class JobSeekerMenu {
         
         List<Job> jobs = jobService.getAllJobs();
         if (jobs.isEmpty()) {
-            ConsoleColors.printWarning("No jobs available at the moment.");
+            ConsoleColors.printWarning(AppMessages.NO_JOBS_AVAILABLE);
             return;
         }
         
@@ -82,12 +91,8 @@ public class JobSeekerMenu {
 
     private void searchJobs() {
         ConsoleColors.printTitle("SEARCH JOBS");
-        
-        System.out.println("1. Search by title");
-        System.out.println("2. Search by skill");
-        System.out.println("3. Back to menu");
-        
-        int choice = getIntInput("Enter your choice: ");
+        MenuUtils.printMenu("Search Jobs", "Search by title", "Search by skill", "Back to menu");
+        int choice = InputUtils.getIntInput(scanner, AppMessages.ENTER_CHOICE);
         
         switch (choice) {
             case 1:
@@ -99,18 +104,17 @@ public class JobSeekerMenu {
             case 3:
                 return;
             default:
-                ConsoleColors.printError("Invalid choice.");
+                ConsoleColors.printError(AppMessages.INVALID_CHOICE);
         }
     }
 
     private void searchByTitle() {
-        System.out.print("Enter job title to search: ");
-        String title = scanner.nextLine();
+        String title = InputUtils.getStringInput(scanner, AppMessages.ENTER_JOB_TITLE);
         
         try {
             List<Job> jobs = jobService.searchJobsByTitle(title);
             if (jobs.isEmpty()) {
-                ConsoleColors.printWarning("No jobs found with title: " + title);
+                ConsoleColors.printWarning(AppMessages.NO_JOBS_FOUND_TITLE + title);
             } else {
                 ConsoleColors.printTitle("SEARCH RESULTS");
                 for (Job job : jobs) {
@@ -118,18 +122,17 @@ public class JobSeekerMenu {
                 }
             }
         } catch (IllegalArgumentException e) {
-            ConsoleColors.printError("Search failed: " + e.getMessage());
+            ConsoleColors.printError(AppMessages.SEARCH_FAILED + e.getMessage());
         }
     }
 
     private void searchBySkill() {
-        System.out.print("Enter skill to search: ");
-        String skill = scanner.nextLine();
+        String skill = InputUtils.getStringInput(scanner, AppMessages.ENTER_SKILL);
         
         try {
             List<Job> jobs = jobService.searchJobsBySkill(skill);
             if (jobs.isEmpty()) {
-                ConsoleColors.printWarning("No jobs found with skill: " + skill);
+                ConsoleColors.printWarning(AppMessages.NO_JOBS_FOUND_SKILL + skill);
             } else {
                 ConsoleColors.printTitle("SEARCH RESULTS");
                 for (Job job : jobs) {
@@ -137,33 +140,32 @@ public class JobSeekerMenu {
                 }
             }
         } catch (IllegalArgumentException e) {
-            ConsoleColors.printError("Search failed: " + e.getMessage());
+            ConsoleColors.printError(AppMessages.SEARCH_FAILED + e.getMessage());
         }
     }
 
     private void applyForJob() {
         ConsoleColors.printTitle("APPLY FOR JOB");
         
-        System.out.print("Enter job ID to apply: ");
-        Long jobId = getLongInput("Enter job ID: ");
+        Long jobId = InputUtils.getLongInput(scanner, AppMessages.ENTER_JOB_ID);
         
         try {
             Job job = jobService.getJobById(jobId);
             if (job == null) {
-                ConsoleColors.printError("Job not found.");
+                ConsoleColors.printError(AppMessages.JOB_NOT_FOUND);
                 return;
             }
             
             if (applicationService.hasApplied(jobSeeker.getId(), jobId)) {
-                ConsoleColors.printWarning("You have already applied for this job.");
+                ConsoleColors.printWarning(AppMessages.ALREADY_APPLIED_WARNING);
                 return;
             }
             
             Application application = applicationService.applyForJob(jobSeeker, job);
-            ConsoleColors.printSuccess("Application submitted successfully! Application ID: " + application.getId());
+            ConsoleColors.printSuccess(AppMessages.APPLICATION_SUCCESS + application.getId());
             
         } catch (IllegalArgumentException e) {
-            ConsoleColors.printError("Application failed: " + e.getMessage());
+            ConsoleColors.printError(AppMessages.APPLICATION_FAILED + e.getMessage());
         }
     }
 
@@ -173,7 +175,7 @@ public class JobSeekerMenu {
         try {
             List<Application> applications = applicationService.getApplicationsByJobSeeker(jobSeeker.getId());
             if (applications.isEmpty()) {
-                ConsoleColors.printWarning("You haven't applied for any jobs yet.");
+                ConsoleColors.printWarning(AppMessages.NO_APPLICATIONS_YET);
                 return;
             }
             
@@ -181,21 +183,20 @@ public class JobSeekerMenu {
                 displayApplication(app);
             }
         } catch (IllegalArgumentException e) {
-            ConsoleColors.printError("Failed to load applications: " + e.getMessage());
+            ConsoleColors.printError(AppMessages.FAILED_TO_LOAD_APPLICATIONS + e.getMessage());
         }
     }
 
     private void withdrawApplication() {
         ConsoleColors.printTitle("WITHDRAW APPLICATION");
         
-        System.out.print("Enter application ID to withdraw: ");
-        Long applicationId = getLongInput("Enter application ID: ");
+        Long applicationId = InputUtils.getLongInput(scanner, AppMessages.ENTER_APPLICATION_ID);
         
         try {
             applicationService.withdrawApplication(applicationId);
-            ConsoleColors.printSuccess("Application withdrawn successfully!");
+            ConsoleColors.printSuccess(AppMessages.WITHDRAW_SUCCESS);
         } catch (IllegalArgumentException e) {
-            ConsoleColors.printError("Withdrawal failed: " + e.getMessage());
+            ConsoleColors.printError(AppMessages.WITHDRAW_FAILED + e.getMessage());
         }
     }
 
@@ -219,24 +220,10 @@ public class JobSeekerMenu {
     }
 
     private int getIntInput(String prompt) {
-        while (true) {
-            try {
-                System.out.print(prompt);
-                return Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                ConsoleColors.printError("Please enter a valid number.");
-            }
-        }
+        return InputUtils.getIntInput(scanner, prompt);
     }
 
     private Long getLongInput(String prompt) {
-        while (true) {
-            try {
-                System.out.print(prompt);
-                return Long.parseLong(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                ConsoleColors.printError("Please enter a valid number.");
-            }
-        }
+        return InputUtils.getLongInput(scanner, prompt);
     }
 } 

@@ -4,6 +4,7 @@ import dao.UserDAO;
 import model.JobSeeker;
 import model.Recruiter;
 import model.User;
+import util.AppMessages;
 import util.Validator;
 
 public class UserService {
@@ -14,78 +15,61 @@ public class UserService {
     }
 
     public JobSeeker registerJobSeeker(String name, String email, String password) {
-        // Validate input
         if (!Validator.isValidName(name)) {
-            throw new IllegalArgumentException("Invalid name. Name must be at least 2 characters long.");
+            throw new IllegalArgumentException(AppMessages.INVALID_NAME);
         }
-        
         if (!Validator.isValidEmail(email)) {
-            throw new IllegalArgumentException("Invalid email format.");
+            throw new IllegalArgumentException(AppMessages.INVALID_EMAIL);
         }
-        
         if (!Validator.isValidPassword(password)) {
-            throw new IllegalArgumentException("Invalid password. Password must be at least 6 characters long.");
+            throw new IllegalArgumentException(AppMessages.INVALID_PASSWORD);
         }
-
-        // Check if email already exists
         if (userDAO.emailExists(email)) {
-            throw new IllegalArgumentException("Email already registered.");
+            throw new IllegalArgumentException(AppMessages.EMAIL_ALREADY_REGISTERED);
         }
-
-        // Create job seeker
         return userDAO.createJobSeeker(name, email, password);
     }
 
     public Recruiter registerRecruiter(String name, String email, String password) {
-        // Validate input
         if (!Validator.isValidName(name)) {
-            throw new IllegalArgumentException("Invalid name. Name must be at least 2 characters long.");
+            throw new IllegalArgumentException(AppMessages.INVALID_NAME);
         }
-        
         if (!Validator.isValidEmail(email)) {
-            throw new IllegalArgumentException("Invalid email format.");
+            throw new IllegalArgumentException(AppMessages.INVALID_EMAIL);
         }
-        
         if (!Validator.isValidPassword(password)) {
-            throw new IllegalArgumentException("Invalid password. Password must be at least 6 characters long.");
+            throw new IllegalArgumentException(AppMessages.INVALID_PASSWORD);
         }
-
-        // Check if email already exists
         if (userDAO.emailExists(email)) {
-            throw new IllegalArgumentException("Email already registered.");
+            throw new IllegalArgumentException(AppMessages.EMAIL_ALREADY_REGISTERED);
         }
-
-        // Create recruiter
         return userDAO.createRecruiter(name, email, password);
     }
 
     public User login(String email, String password) {
         if (!Validator.isValidEmail(email)) {
-            throw new IllegalArgumentException("Invalid email format.");
+            throw new IllegalArgumentException(AppMessages.INVALID_EMAIL);
         }
-        
         if (!Validator.isValidPassword(password)) {
-            throw new IllegalArgumentException("Invalid password.");
+            throw new IllegalArgumentException(AppMessages.INVALID_PASSWORD);
         }
-
         User user = userDAO.authenticateUser(email, password);
         if (user == null) {
-            throw new IllegalArgumentException("Invalid email or password.");
+            throw new IllegalArgumentException(AppMessages.LOGIN_FAILED + "Invalid email or password.");
         }
-
         return user;
     }
 
     public JobSeeker getJobSeekerById(Long id) {
         if (!Validator.isValidId(id)) {
-            throw new IllegalArgumentException("Invalid job seeker ID.");
+            throw new IllegalArgumentException(AppMessages.INVALID_ID);
         }
         return userDAO.getJobSeekerById(id);
     }
 
     public Recruiter getRecruiterById(Long id) {
         if (!Validator.isValidId(id)) {
-            throw new IllegalArgumentException("Invalid recruiter ID.");
+            throw new IllegalArgumentException(AppMessages.INVALID_ID);
         }
         return userDAO.getRecruiterById(id);
     }

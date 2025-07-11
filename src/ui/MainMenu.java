@@ -7,6 +7,8 @@ import model.User;
 import service.AuthService;
 import util.AppMessages;
 import util.ConsoleColors;
+import util.InputUtils;
+import util.MenuUtils;
 
 public class MainMenu {
     private AuthService authService;
@@ -22,8 +24,8 @@ public class MainMenu {
         ConsoleColors.printTitle(AppMessages.APP_TITLE);
         
         while (true) {
-            showMainMenu();
-            int choice = getIntInput(AppMessages.ENTER_CHOICE);
+            MenuUtils.printMenu(AppMessages.MAIN_MENU, AppMessages.LOGIN, AppMessages.REGISTER, AppMessages.EXIT_OPTION);
+            int choice = InputUtils.getIntInput(scanner, AppMessages.ENTER_CHOICE);
             
             switch (choice) {
                 case 1:
@@ -41,22 +43,12 @@ public class MainMenu {
         }
     }
 
-    private void showMainMenu() {
-        System.out.println("\n" + ConsoleColors.CYAN + AppMessages.MAIN_MENU + ConsoleColors.RESET);
-        System.out.println("1. " + AppMessages.LOGIN);
-        System.out.println("2. " + AppMessages.REGISTER);
-        System.out.println("3. " + AppMessages.EXIT_OPTION);
-        System.out.println();
-    }
-
     private void login() {
         ConsoleColors.printTitle(AppMessages.LOGIN);
         
-        System.out.print(AppMessages.ENTER_EMAIL);
-        String email = scanner.nextLine();
+        String email = InputUtils.getStringInput(scanner, AppMessages.ENTER_EMAIL);
         
-        System.out.print(AppMessages.ENTER_PASSWORD);
-        String password = scanner.nextLine();
+        String password = InputUtils.getStringInput(scanner, AppMessages.ENTER_PASSWORD);
         
         try {
             currentUser = authService.authenticate(email, password);
@@ -83,7 +75,7 @@ public class MainMenu {
         System.out.println("2. Register as Recruiter");
         System.out.println("3. Back to Main Menu");
         
-        int choice = getIntInput(AppMessages.ENTER_CHOICE);
+        int choice = InputUtils.getIntInput(scanner, AppMessages.ENTER_CHOICE);
         
         switch (choice) {
             case 1:
@@ -102,14 +94,11 @@ public class MainMenu {
     private void registerJobSeeker() {
         ConsoleColors.printTitle("JOB SEEKER REGISTRATION");
         
-        System.out.print(AppMessages.ENTER_NAME);
-        String name = scanner.nextLine();
+        String name = InputUtils.getStringInput(scanner, AppMessages.ENTER_NAME);
         
-        System.out.print(AppMessages.ENTER_EMAIL);
-        String email = scanner.nextLine();
+        String email = InputUtils.getStringInput(scanner, AppMessages.ENTER_EMAIL);
         
-        System.out.print(AppMessages.ENTER_PASSWORD);
-        String password = scanner.nextLine();
+        String password = InputUtils.getStringInput(scanner, AppMessages.ENTER_PASSWORD);
         
         try {
             JobSeeker jobSeeker = authService.registerJobSeeker(name, email, password);
@@ -122,14 +111,11 @@ public class MainMenu {
     private void registerRecruiter() {
         ConsoleColors.printTitle("RECRUITER REGISTRATION");
         
-        System.out.print(AppMessages.ENTER_NAME);
-        String name = scanner.nextLine();
+        String name = InputUtils.getStringInput(scanner, AppMessages.ENTER_NAME);
         
-        System.out.print(AppMessages.ENTER_EMAIL);
-        String email = scanner.nextLine();
+        String email = InputUtils.getStringInput(scanner, AppMessages.ENTER_EMAIL);
         
-        System.out.print(AppMessages.ENTER_PASSWORD);
-        String password = scanner.nextLine();
+        String password = InputUtils.getStringInput(scanner, AppMessages.ENTER_PASSWORD);
         
         try {
             Recruiter recruiter = authService.registerRecruiter(name, email, password);
@@ -140,13 +126,6 @@ public class MainMenu {
     }
 
     private int getIntInput(String prompt) {
-        while (true) {
-            try {
-                System.out.print(prompt);
-                return Integer.parseInt(scanner.nextLine());
-            } catch (NumberFormatException e) {
-                ConsoleColors.printError(AppMessages.PLEASE_ENTER_VALID_NUMBER);
-            }
-        }
+        return InputUtils.getIntInput(scanner, prompt);
     }
 } 

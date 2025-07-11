@@ -56,6 +56,9 @@ public class AppMessages {
     public static final String NO_APPLICATIONS_YET = "You haven't applied for any jobs yet.";
     public static final String NO_JOBS_FOUND_TITLE = "No jobs found with title: ";
     public static final String NO_JOBS_FOUND_SKILL = "No jobs found with skill: ";
+    public static final String FAILED_TO_LOAD_APPLICATIONS = "Failed to load applications: ";
+    public static final String INVALID_JOB_TITLE = "Invalid job title. Title must be at least 3 characters long.";
+    public static final String INVALID_JOB_DESCRIPTION = "Invalid job description. Description must be at least 10 characters long.";
 
     // Info/Warnings
     public static final String LOGGING_OUT = "Logging out...";
@@ -70,5 +73,7 @@ public class AppMessages {
     public static final String INVALID_RATING = "Invalid rating. Must be between 1 and 5.";
     public static final String INVALID_ID = "Invalid ID.";
     public static final String PLEASE_ENTER_VALID_NUMBER = "Please enter a valid number.";
+    public static final String JOB_SEEKER_CANNOT_BE_NULL = "Job seeker cannot be null.";
+    public static final String JOB_CANNOT_BE_NULL = "Job cannot be null.";
     // ...add more as needed
 } 
