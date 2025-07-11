@@ -1,12 +1,12 @@
 package ui;
 
-import service.AuthService;
-import model.User;
+import java.util.Scanner;
 import model.JobSeeker;
 import model.Recruiter;
+import model.User;
+import service.AuthService;
+import util.AppMessages;
 import util.ConsoleColors;
-
-import java.util.Scanner;
 
 public class MainMenu {
     private AuthService authService;
@@ -19,11 +19,11 @@ public class MainMenu {
     }
 
     public void start() {
-        ConsoleColors.printTitle("JOB PORTAL SYSTEM");
+        ConsoleColors.printTitle(AppMessages.APP_TITLE);
         
         while (true) {
             showMainMenu();
-            int choice = getIntInput("Enter your choice: ");
+            int choice = getIntInput(AppMessages.ENTER_CHOICE);
             
             switch (choice) {
                 case 1:
@@ -33,34 +33,34 @@ public class MainMenu {
                     register();
                     break;
                 case 3:
-                    ConsoleColors.printInfo("Thank you for using Job Portal System!");
+                    ConsoleColors.printInfo(AppMessages.EXIT);
                     return;
                 default:
-                    ConsoleColors.printError("Invalid choice. Please try again.");
+                    ConsoleColors.printError(AppMessages.INVALID_CHOICE);
             }
         }
     }
 
     private void showMainMenu() {
-        System.out.println("\n" + ConsoleColors.CYAN + "=== MAIN MENU ===" + ConsoleColors.RESET);
-        System.out.println("1. Login");
-        System.out.println("2. Register");
-        System.out.println("3. Exit");
+        System.out.println("\n" + ConsoleColors.CYAN + AppMessages.MAIN_MENU + ConsoleColors.RESET);
+        System.out.println("1. " + AppMessages.LOGIN);
+        System.out.println("2. " + AppMessages.REGISTER);
+        System.out.println("3. " + AppMessages.EXIT_OPTION);
         System.out.println();
     }
 
     private void login() {
-        ConsoleColors.printTitle("LOGIN");
+        ConsoleColors.printTitle(AppMessages.LOGIN);
         
-        System.out.print("Enter email: ");
+        System.out.print(AppMessages.ENTER_EMAIL);
         String email = scanner.nextLine();
         
-        System.out.print("Enter password: ");
+        System.out.print(AppMessages.ENTER_PASSWORD);
         String password = scanner.nextLine();
         
         try {
             currentUser = authService.authenticate(email, password);
-            ConsoleColors.printSuccess("Login successful! Welcome, " + currentUser.getName() + "!");
+            ConsoleColors.printSuccess(AppMessages.LOGIN_SUCCESS + currentUser.getName() + "!");
             
             if (authService.isJobSeeker(currentUser)) {
                 JobSeekerMenu jobSeekerMenu = new JobSeekerMenu((JobSeeker) currentUser);
@@ -72,7 +72,7 @@ public class MainMenu {
             
             currentUser = null; // Logout after menu closes
         } catch (IllegalArgumentException e) {
-            ConsoleColors.printError("Login failed: " + e.getMessage());
+            ConsoleColors.printError(AppMessages.LOGIN_FAILED + e.getMessage());
         }
     }
 
@@ -83,7 +83,7 @@ public class MainMenu {
         System.out.println("2. Register as Recruiter");
         System.out.println("3. Back to Main Menu");
         
-        int choice = getIntInput("Enter your choice: ");
+        int choice = getIntInput(AppMessages.ENTER_CHOICE);
         
         switch (choice) {
             case 1:
@@ -95,47 +95,47 @@ public class MainMenu {
             case 3:
                 return;
             default:
-                ConsoleColors.printError("Invalid choice.");
+                ConsoleColors.printError(AppMessages.INVALID_CHOICE);
         }
     }
 
     private void registerJobSeeker() {
         ConsoleColors.printTitle("JOB SEEKER REGISTRATION");
         
-        System.out.print("Enter name: ");
+        System.out.print(AppMessages.ENTER_NAME);
         String name = scanner.nextLine();
         
-        System.out.print("Enter email: ");
+        System.out.print(AppMessages.ENTER_EMAIL);
         String email = scanner.nextLine();
         
-        System.out.print("Enter password: ");
+        System.out.print(AppMessages.ENTER_PASSWORD);
         String password = scanner.nextLine();
         
         try {
             JobSeeker jobSeeker = authService.registerJobSeeker(name, email, password);
-            ConsoleColors.printSuccess("Registration successful! Welcome, " + jobSeeker.getName() + "!");
+            ConsoleColors.printSuccess(AppMessages.REGISTRATION_SUCCESS + jobSeeker.getName() + "!");
         } catch (IllegalArgumentException e) {
-            ConsoleColors.printError("Registration failed: " + e.getMessage());
+            ConsoleColors.printError(AppMessages.REGISTRATION_FAILED + e.getMessage());
         }
     }
 
     private void registerRecruiter() {
         ConsoleColors.printTitle("RECRUITER REGISTRATION");
         
-        System.out.print("Enter name: ");
+        System.out.print(AppMessages.ENTER_NAME);
         String name = scanner.nextLine();
         
-        System.out.print("Enter email: ");
+        System.out.print(AppMessages.ENTER_EMAIL);
         String email = scanner.nextLine();
         
-        System.out.print("Enter password: ");
+        System.out.print(AppMessages.ENTER_PASSWORD);
         String password = scanner.nextLine();
         
         try {
             Recruiter recruiter = authService.registerRecruiter(name, email, password);
-            ConsoleColors.printSuccess("Registration successful! Welcome, " + recruiter.getName() + "!");
+            ConsoleColors.printSuccess(AppMessages.REGISTRATION_SUCCESS + recruiter.getName() + "!");
         } catch (IllegalArgumentException e) {
-            ConsoleColors.printError("Registration failed: " + e.getMessage());
+            ConsoleColors.printError(AppMessages.REGISTRATION_FAILED + e.getMessage());
         }
     }
 
@@ -145,7 +145,7 @@ public class MainMenu {
                 System.out.print(prompt);
                 return Integer.parseInt(scanner.nextLine());
             } catch (NumberFormatException e) {
-                ConsoleColors.printError("Please enter a valid number.");
+                ConsoleColors.printError(AppMessages.PLEASE_ENTER_VALID_NUMBER);
             }
         }
     }
