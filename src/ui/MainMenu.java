@@ -69,7 +69,7 @@ public class MainMenu {
     }
 
     private void register() {
-        ConsoleColors.printTitle("REGISTRATION");
+        ConsoleColors.printTitle(AppMessages.REGISTER);
         
         System.out.println("1. Register as Job Seeker");
         System.out.println("2. Register as Recruiter");

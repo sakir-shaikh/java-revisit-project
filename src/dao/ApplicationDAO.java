@@ -1,12 +1,11 @@
 package dao;
 
-import model.Application;
-import model.JobSeeker;
-import model.Job;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import model.Application;
+import model.Job;
+import model.JobSeeker;
 
 public class ApplicationDAO {
     private Database database;
