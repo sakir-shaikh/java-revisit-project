@@ -1,0 +1,30 @@
+# Application Configuration Template
+# Copy this file to application.properties and update with your actual values
+
+# Application Settings
+app.name=Job Portal
+app.version=1.0.0
+app.environment=development
+
+# Logging Configuration
+logging.level=INFO
+logging.file=logs/application.log
+logging.maxFileSize=10MB
+logging.maxFiles=5
+
+# Security Settings
+security.session.timeout=3600
+security.password.minLength=8
+security.password.requireSpecialChar=true
+
+# Feature Flags
+feature.emailNotifications=false
+feature.smsNotifications=false
+feature.fileUpload=true
+feature.advancedSearch=true
+
+# Performance Settings
+cache.enabled=true
+cache.ttl=300
+pagination.defaultSize=10
+pagination.maxSize=100 

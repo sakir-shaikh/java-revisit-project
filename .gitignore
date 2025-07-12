@@ -28,3 +28,31 @@ bin/
 ### Mac OS ###
 .DS_Store
 .idea
+
+### Environment and Configuration ###
+# Exclude actual environment files with sensitive data
+config/database.properties
+config/application.properties
+config/application-*.properties
+
+# Include template files
+!config/database.properties.template
+!config/application.properties.template
+
+# Logs
+logs/
+*.log
+
+# Build outputs
+target/
+build/
+
+# IDE specific
+*.iml
+*.ipr
+*.iws
+
+# OS generated files
+Thumbs.db
+ehthumbs.db
+Desktop.ini
